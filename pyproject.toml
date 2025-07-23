@@ -1,0 +1,52 @@
+[build-system]
+requires = [
+    "setuptools>=61.0",
+    "wheel"
+]
+build-backend = "setuptools.build_meta"
+
+[tool.black]
+line-length = 79
+
+[project]
+name = "chesstagcql"
+version = "1.0.dev0"
+authors = [
+  { name="Roger Marsh", email="roger.marsh@solentware.co.uk" },
+]
+description = "Database for chess games."
+classifiers = [
+    "License :: OSI Approved :: BSD License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+    "Topic :: Games/Entertainment :: Board Games",
+    "Intended Audience :: End Users/Desktop",
+    "Development Status :: 3 - Alpha",
+]
+license = {file = "LICENCE"}
+readme = "README"
+dependencies = [
+    "chesstab==8.1.dev0",
+]
+
+[project.urls]
+Homepage = "http://www.solentware.co.uk"
+Repository = "https://github.com/RogerMarsh/chesstagcql.git"
+"Bug Tracker" = "https://github.com/RogerMarsh/chesstagcql/issues"
+
+[tool.setuptools]
+packages = [
+    "chesstagcql",
+    "chesstagcql.basecore",
+    "chesstagcql.core",
+    "chesstagcql.cql",
+    "chesstagcql.gui",
+    "chesstagcql.help_",
+]
+
+[tool.setuptools.package-data]
+chesstab = [
+    "help_/*.rst",
+]

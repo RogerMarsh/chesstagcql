@@ -1,0 +1,45 @@
+# __init__.py
+# Copyright 2025 Roger Marsh
+# Licence: See LICENCE (BSD licence)
+
+"""Import database interface definitions from chesstab package."""
+
+from solentware_base.core.constants import (
+    BERKELEYDB_MODULE,
+    BSDDB3_MODULE,
+    DPT_MODULE,
+    SQLITE3_MODULE,
+    APSW_MODULE,
+    UNQLITE_MODULE,
+    VEDIS_MODULE,
+    GNU_MODULE,
+    NDBM_MODULE,
+    DB_TCL_MODULE,
+    LMDB_MODULE,
+)
+
+from chesstab import APPLICATION_DATABASE_MODULE
+from chesstab import FULL_POSITION_MODULE
+from chesstab import ANALYSIS_MODULE
+from chesstab import SELECTION_MODULE
+
+APPLICATION_NAME = "ChessTagCQL"
+ERROR_LOG = "ErrorLog"
+
+# Default partial position dataset module name.
+_DEFAULTPARTIALPOSITION = __name__ + ".basecore.cqlds"
+
+# Map database module names to partial position dataset module.
+PARTIAL_POSITION_MODULE = {
+    BERKELEYDB_MODULE: _DEFAULTPARTIALPOSITION,
+    BSDDB3_MODULE: _DEFAULTPARTIALPOSITION,
+    SQLITE3_MODULE: _DEFAULTPARTIALPOSITION,
+    APSW_MODULE: _DEFAULTPARTIALPOSITION,
+    DPT_MODULE: _DEFAULTPARTIALPOSITION,
+    UNQLITE_MODULE: _DEFAULTPARTIALPOSITION,
+    VEDIS_MODULE: _DEFAULTPARTIALPOSITION,
+    GNU_MODULE: _DEFAULTPARTIALPOSITION,
+    NDBM_MODULE: _DEFAULTPARTIALPOSITION,
+    DB_TCL_MODULE: _DEFAULTPARTIALPOSITION,
+    LMDB_MODULE: _DEFAULTPARTIALPOSITION,
+}
