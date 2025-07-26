@@ -3,11 +3,12 @@
 # Licence: See LICENCE (BSD licence)
 
 """Chess game exporters."""
+import ast
 
 import pgn_read
 
 from chesstab.core import chessrecord, filespec
-from chesstab.core.export_pgn_import_format import export_pgn_import_format
+from chesstab.core.export_game import text_format_tokens
 
 # PGN specification states ascii but these export functions used the
 # default encoding before introduction of _ENCODING attribute.
@@ -48,10 +49,10 @@ def export_all_games_for_cql_scan(database, filename):
     """
     if filename is None:
         return True
-    instance = chessrecord.ChessDBrecordGame()
+    literal_eval = ast.literal_eval
+    instance = chessrecord.ChessDBrecordGameText()
     instance.set_database(database)
     all_games_output = None
-    no_games_output = True
     expected_record_number = 0
     database.start_read_only_transaction()
     valid_games = database.recordlist_ebm(filespec.GAMES_FILE_DEF)
@@ -70,27 +71,41 @@ def export_all_games_for_cql_scan(database, filename):
             with open(filename, "w", encoding=_ENCODING) as gamesout:
                 current_record = cursor.first()
                 while current_record:
-                    try:
-                        instance.load_record(current_record)
-                    except StopIteration:
-                        break
+                    instance.load_record(current_record)
                     record_number = current_record[0]
                     while expected_record_number < record_number:
                         gamesout.write(_NULL_GAME_TEXT)
                         expected_record_number += 1
-                    # Fix pycodestyle E501 (83 > 79 characters).
-                    # black formatting applied with line-length = 79.
-                    ivcg = instance.value.collected_game
-                    if ivcg.is_pgn_valid_export_format():
-                        gamesout.write(export_pgn_import_format(ivcg))
-                        if all_games_output is None:
-                            all_games_output = True
-                            no_games_output = False
-                    else:
-                        gamesout.write(_NULL_GAME_TEXT)
-                        if all_games_output:
-                            if not no_games_output:
-                                all_games_output = False
+                    tokens = []
+                    for token in text_format_tokens.finditer(
+                        literal_eval(instance.get_srvalue()[0])
+                    ):
+                        groups = token.groups()
+                        if (
+                            groups[9] is not None  # Escaped.
+                            and tokens
+                            and tokens[-1] != "\n"
+                        ):
+                            if tokens[-1] == " ":
+                                tokens[-1] = "\n"
+                            else:
+                                tokens.append("\n")
+                        tokens.append(token.group())
+                        if (
+                            groups[0] is not None  # Tag Pair.
+                            or groups[3] is not None  # EOL Comment.
+                            or groups[9] is not None  # Escaped.
+                        ):
+                            tokens.append("\n")
+                        elif (
+                            groups[11] is None  # Check.
+                            and groups[12] is None  # Traditional.
+                        ):
+                            tokens.append(" ")
+                    gamesout.write("".join(tokens))
+                    gamesout.write("\n")
+                    if all_games_output is None:
+                        all_games_output = True
                     expected_record_number = record_number + 1
                     current_record = cursor.next()
         finally:

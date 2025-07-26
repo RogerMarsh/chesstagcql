@@ -10,7 +10,7 @@ line-length = 79
 
 [project]
 name = "chesstagcql"
-version = "1.0.dev0"
+version = "1.0.dev1"
 authors = [
   { name="Roger Marsh", email="roger.marsh@solentware.co.uk" },
 ]
@@ -28,7 +28,7 @@ classifiers = [
 license = {file = "LICENCE"}
 readme = "README"
 dependencies = [
-    "chesstab==8.1.dev0",
+    "chesstab==8.1.dev1",
 ]
 
 [project.urls]

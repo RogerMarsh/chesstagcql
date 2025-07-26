@@ -26,7 +26,11 @@ Games can be output to PGN files in `Export Format`_, `Reduced Export Format`_, 
 Installation Instructions
 =========================
 
-Download chesstagcql and dependencies from Github repositories and install using Python pip utility.  (This will change when the first non-'.dev' version is available.)
+This package can be installed by typing
+
+   python -m pip install --user --trusted-host solentware.co.uk --find-links http://solentware.co.uk/wheeldevs.html chesstagcql
+
+at the command prompt.
 
 See `Python`_ and `pip`_ documentation for alternatives and platform-specific points.
 
